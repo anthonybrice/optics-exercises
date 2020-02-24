@@ -37,7 +37,7 @@ data Inventory = Inventory
   { _wand :: String
   , _book :: String
   , _potions :: [String]
-  }
+  } deriving (Show)
 makeLenses ''Inventory
 
 second :: Lens' (a, b, c) b
@@ -102,18 +102,18 @@ badLens = lens getter setter where
 data Builder = Builder
   { _context :: [String]
   , _build :: [String] -> String
-  } deriving Show
+  }
 
-instance Show ([String] -> String) where
-  show _ = "function"
+instance Show Builder where
+  show x = "{_context:  " <> show (_context x) <> ", _build: function"
 
 context :: Lens' Builder String
 context = lens getter setter where
-  getter x = concat $ reverse $ _context x
-  setter x y =
-    if y `elem` _context x
-    then x { _context = y : _context x }
-    else x
+  getter x = head $ _context x
+  setter x y
+    | [] == _context x = x { _context = [y] }
+    | not $ y == head (_context x) = x { _context = y : _context x }
+    | otherwise = x
 
 data User = User
   { _firstName :: String
