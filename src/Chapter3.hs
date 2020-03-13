@@ -107,6 +107,7 @@ data Builder = Builder
 instance Show Builder where
   show x = "{_context:  " <> show (_context x) <> ", _build: function"
 
+-- | Passes get-set, set-get, and set-set
 context :: Lens' Builder String
 context = lens getter setter where
   getter x = head $ _context x
